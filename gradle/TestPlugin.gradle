@@ -1,0 +1,18 @@
+class TestPlugin implements Plugin<Project> {
+
+    void apply(Project target) {
+        target.logger.error("TestPlugin exec start")
+        def android = target.extensions.android
+        target.afterEvaluate {
+            target.logger.error("TestPlugin project afterEvaluate")
+        }
+        target.subprojects { Project subProject ->
+            subProject.afterEvaluate {
+                target.logger.error("TestPlugin subProject afterEvaluate")
+            }
+        }
+        target.logger.error("TestPlugin exec end")
+    }
+}
+
+apply plugin: TestPlugin

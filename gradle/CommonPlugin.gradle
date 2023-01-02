@@ -1,0 +1,11 @@
+class CommonPlugin implements Plugin<Project> {
+    void apply(Project project) {
+        project.extensions.create("CommonPlugin", CommonPluginExtension)
+    }
+}
+
+class CommonPluginExtension {
+    String test = 'test'
+}
+
+apply plugin: CommonPlugin

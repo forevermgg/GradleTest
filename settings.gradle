@@ -1,0 +1,27 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "CmakeTest"
+include ':app'
+println("Android Project Root: ${settingsDir.canonicalPath}")
+File appRepo = new File(settingsDir, 'app')
+println("Android Project appRepo: ${appRepo}")
+def androidRoot = new File(settingsDir, 'app')
+println("Android Project androidRoot: ${androidRoot}")
+def gradleToolsDir = new File(settingsDir, 'gradle')
+println("Android Project gradleToolsDir: ${gradleToolsDir}")
+
+gradle.ext.appRepoDir = appRepo.getCanonicalPath()
+gradle.ext.androidDir = androidRoot.getCanonicalPath()
+gradle.ext.gradleToolsDir = gradleToolsDir.getCanonicalPath()

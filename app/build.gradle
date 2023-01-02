@@ -1,0 +1,148 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply plugin: "org.gradle.test-retry"
+
+apply from: "${gradle.ext.gradleToolsDir}/TestPlugin.gradle"
+apply from: "${gradle.ext.gradleToolsDir}/GreetingPlugin.gradle"
+apply from: "${gradle.ext.gradleToolsDir}/CommonPlugin.gradle"
+
+System.err.println("project.CommonPlugin.test : ${project.CommonPlugin.test}")
+
+android {
+    namespace 'com.test.cmaketest'
+    compileSdk 33
+    ndkVersion "25.1.8937393"
+    defaultConfig {
+        applicationId "com.test.cmaketest"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags '-std=c++17'
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    afterEvaluate {
+        tasks.named("preBuild").get().dependsOn "testPy"
+    }
+    afterEvaluate {
+        assembleDebug.dependsOn assemblewithlog
+    }
+    // https://handstandsam.com/2021/06/07/run-custom-gradle-task-after-build/
+    tasks.whenTaskAdded { task ->
+        if (task.name == 'assembleDebug') {
+            // dependsOn() finalizedBy 区别
+            /*Circular dependency between the following tasks:
+            :app:assembleDebug
+            \--- :app:printVariantNames
+            \--- :app:assembleDebug (*)*/
+            // task.dependsOn printVariantNames
+            finalizedBy("printVariantNames")
+
+            task.dependsOn third
+        }
+    }
+    applicationVariants.all { variant ->
+        // 打包完成后做的一些事
+        variant.assemble.doLast {
+            System.err.println("打包完成后做的一些事")
+            System.err.println("project.GreetingPlugin.hello : ${project.hello}")
+            /*copy {
+                variant.outputs.forEach { file ->
+                    copy {
+                        from file.outputFile
+                        into out
+                    }
+                }
+            }*/
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+}
+
+tasks.register("testPy", Exec) {
+    System.err.println("checkString")
+    System.err.println("checkString workingDir:${workingDir}")
+    // https://www.icoding.co/2020/06/android-gradle-task-i18n-check
+    commandLine "python3", "test.py"
+    workingDir = "${rootProject.projectDir}/python"
+    System.err.println("checkString workingDir:${workingDir}")
+}
+
+//这个task 需要放在 app/build.gradle文件中的android 代码块里
+task assemblewithlog {
+    System.err.println("assembleDebug assemblewithlog exec end")
+}
+
+task printVariantNames() {
+    doLast {
+        android.applicationVariants.all { variant ->
+            System.err.println("printVariantNames:" + variant.name)
+        }
+    }
+}
+
+task installDebugFlavors() {
+    android.applicationVariants.all { v ->
+        if (v.name.endsWith('Debug')) {
+            String name = v.name.capitalize()
+            dependsOn "install$name"
+        }
+    }
+}
+
+task first {
+    doLast {
+        System.err.println("+++++first+++++")
+    }
+}
+task second {
+    doLast {
+        System.err.println("+++++second+++++")
+    }
+}
+// 若当前任务依赖多个任务，先执行依赖的任务(first,second)，再执行当前任务(third)，但依赖的任务的执行顺序是由Gradle决定,first和second没有依赖关系，因此执行顺序是随机的。
+task third(dependsOn :[second,first]) {
+    doLast {
+        System.err.println("+++++third+++++")
+    }
+}
