@@ -1,6 +1,11 @@
 class TestPlugin implements Plugin<Project> {
 
     void apply(Project target) {
+        if (target.plugins.hasPlugin('com.android.application')) {
+            target.logger.error('Android Application')
+        } else {
+            target.logger.error('Android Application Plugin')
+        }
         target.logger.error("TestPlugin exec start")
         def android = target.extensions.android
         target.afterEvaluate {

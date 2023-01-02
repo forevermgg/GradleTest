@@ -8,4 +8,14 @@ class CommonPluginExtension {
     String test = 'test'
 }
 
+static def log(String text) {
+    System.out.println(text)
+    System.out.flush()
+}
+
+static def logError(String text) {
+    System.err.println(text)
+    System.err.flush()
+}
+
 apply plugin: CommonPlugin
