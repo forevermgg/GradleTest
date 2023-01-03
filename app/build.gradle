@@ -71,20 +71,21 @@ android {
 
             task.dependsOn third
         }
+
+        if (task.name == 'mergeDebugNativeLibs') {
+            finalizedBy("mergeNativeLibsTask")
+        }
+
+        if (task.name == 'mergeReleaseNativeLibs') {
+            finalizedBy("mergeNativeLibsTask")
+        }
     }
+
     applicationVariants.all { variant ->
         // 打包完成后做的一些事
         variant.assemble.doLast {
             System.err.println("打包完成后做的一些事")
             System.err.println("project.GreetingPlugin.hello : ${project.hello}")
-            /*copy {
-                variant.outputs.forEach { file ->
-                    copy {
-                        from file.outputFile
-                        into out
-                    }
-                }
-            }*/
         }
     }
 }
@@ -118,6 +119,12 @@ task printVariantNames() {
         android.applicationVariants.all { variant ->
             System.err.println("printVariantNames:" + variant.name)
         }
+    }
+}
+
+task mergeNativeLibsTask() {
+    doLast {
+        System.err.println("mergeNativeLibsTask:")
     }
 }
 
