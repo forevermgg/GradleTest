@@ -71,13 +71,21 @@ android {
 
             task.dependsOn third
         }
-
+        // mergeDebugNativeLibs
         if (task.name == 'mergeDebugNativeLibs') {
-            finalizedBy("mergeNativeLibsTask")
+            finalizedBy("mergeNativeLibsTaskdoLast")
         }
-
+        // mergeReleaseNativeLibs
         if (task.name == 'mergeReleaseNativeLibs') {
-            finalizedBy("mergeNativeLibsTask")
+            finalizedBy("mergeNativeLibsTaskdoLast")
+        }
+        // stripReleaseDebugSymbols
+        if (task.name == 'stripReleaseDebugSymbols') {
+            task.dependsOn mergeNativeLibsTaskdoFirst
+        }
+        // stripReleaseDebugSymbols
+        if (task.name == 'stripDebugDebugSymbols') {
+            task.dependsOn mergeNativeLibsTaskdoFirst
         }
     }
 
@@ -86,6 +94,12 @@ android {
         variant.assemble.doLast {
             System.err.println("打包完成后做的一些事")
             System.err.println("project.GreetingPlugin.hello : ${project.hello}")
+        }
+    }
+
+    sourceSets{
+        main{
+            jniLibs.srcDirs=['libs']
         }
     }
 }
@@ -122,9 +136,15 @@ task printVariantNames() {
     }
 }
 
-task mergeNativeLibsTask() {
+task mergeNativeLibsTaskdoLast() {
     doLast {
-        System.err.println("mergeNativeLibsTask:")
+        System.err.println("mergeNativeLibsTask doLast:")
+    }
+}
+
+task mergeNativeLibsTaskdoFirst() {
+    doFirst {
+        System.err.println("mergeNativeLibsTask doFirst:")
     }
 }
 
