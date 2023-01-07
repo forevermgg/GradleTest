@@ -8,8 +8,9 @@ apply plugin: "org.gradle.test-retry"
 apply from: "${gradle.ext.gradleToolsDir}/TestPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/GreetingPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/CommonPlugin.gradle"
+apply from: "${gradle.ext.gradleToolsDir}/androidide/androidide.init.gradle"
 
-System.err.println("project.CommonPlugin.test : ${project.CommonPlugin.test}")
+System.err.println("project.CommonPlugin.test : ${project.CommonPlugin.ANDROID_SDK_HOME}")
 
 android {
     namespace 'com.test.cmaketest'

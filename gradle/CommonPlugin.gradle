@@ -1,11 +1,36 @@
 class CommonPlugin implements Plugin<Project> {
     void apply(Project project) {
+        if (GradleVersion.current() < GradleVersion.version("5.6")) {
+            throw new GradleException(
+                    "Gradle version is ${project.gradle.gradleVersion}. Minimum supported version is 5.6")
+        } else {
+            System.err.println("Gradle version is ${project.gradle.gradleVersion}")
+        }
         project.extensions.create("CommonPlugin", CommonPluginExtension)
+        def isApp = project.getPluginManager().hasPlugin("com.android.application")
+        def isLibrary = project.getPluginManager().hasPlugin("com.android.library")
+        System.err.println("isApp ${isApp}")
+        System.err.println("isLibrary ${isLibrary}")
+        if(!(isApp || isLibrary)) {
+            println "Project: " + project.getName() + " doesn't apply Android's application or library plugin"
+            println "AndroidIDE's plugin will not be applied to this project!"
+        }
+
+        def variants = null
+        if(isApp) {
+            variants = project.android.applicationVariants
+        } else if (isLibrary) {
+            variants = project.android.libraryVariants
+        } else {
+            println "AndroidIDE: Cannot find applicationVariants or libraryVariants"
+        }
     }
 }
 
 class CommonPluginExtension {
-    String test = 'test'
+    String ANDROID_SDK_HOME = System.getenv("ANDROID_HOME")
+    String ANDROID_NDK_HOME = System.getenv("ANDROID_NDK")
+    String JAVA_HOME = System.getenv("JAVA_HOME")
 }
 
 static def log(String text) {
@@ -16,6 +41,24 @@ static def log(String text) {
 static def logError(String text) {
     System.err.println(text)
     System.err.flush()
+}
+
+static boolean isAndroidProject(Project project) {
+    return hasPlugin(project, 'com.android.library') || hasPlugin(project, 'com.android.application')
+}
+
+static boolean hasPlugin(Project project, String plugin) {
+    return project.getPluginManager().hasPlugin(plugin)
+}
+
+static boolean hasKotlin(Project project) {
+    Class kotlin
+    try {
+        kotlin = Class.forName("org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin")
+    } catch (ClassNotFoundException e) {
+        return false
+    }
+    return !project.plugins.withType(kotlin).empty
 }
 
 apply plugin: CommonPlugin
