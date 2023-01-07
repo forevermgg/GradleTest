@@ -3,8 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+apply from: rootProject.file('check_env_path.gradle')
 apply plugin: "org.gradle.test-retry"
-
 apply from: "${gradle.ext.gradleToolsDir}/TestPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/GreetingPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/CommonPlugin.gradle"
@@ -69,6 +69,11 @@ android {
     }
     afterEvaluate {
         tasks.named("preBuild").get().dependsOn "testPy"
+        tasks.named("preBuild").get().dependsOn checkEnv
+        /*tasks.named("preBuild").get().dependsOn javaVersionCheck
+        tasks.named("preBuild").get().dependsOn nodeJsVersionCheck
+        tasks.named("preBuild").get().dependsOn androidNdkHomeCheck
+        tasks.named("preBuild").get().dependsOn cmakeVersionCheck*/
     }
     afterEvaluate {
         assembleDebug.dependsOn assemblewithlog
