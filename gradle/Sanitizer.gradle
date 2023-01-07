@@ -6,7 +6,7 @@ project.afterEvaluate {
         if (rootProject.ext.useASAN) {
             def ndkLibDir = android.ndkDirectory.absolutePath + "/toolchains/llvm/prebuilt/"
             def ABIs = rootProject.ext.abiFilters.split(",")
-
+            System.err.println("ndkLibDir:" + ndkLibDir)
             for (String abi : ABIs) {
                 def arch = abi
                 if (abi == 'armeabi-v7a') {
