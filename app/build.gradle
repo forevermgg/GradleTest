@@ -9,6 +9,8 @@ apply from: "${gradle.ext.gradleToolsDir}/TestPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/GreetingPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/CommonPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/androidide/androidide.init.gradle"
+apply from: rootProject.file('gradle/Check.gradle')
+apply from: rootProject.file('gradle/Sanitizer.gradle')
 
 System.err.println("project.CommonPlugin.test : ${project.CommonPlugin.ANDROID_SDK_HOME}")
 
@@ -16,19 +18,29 @@ apply plugin: 'com.mgg.plugin'
 
 android {
     namespace 'com.test.cmaketest'
-    compileSdk 33
-    ndkVersion "25.1.8937393"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    ndkVersion rootProject.ext.ndkVersion
     defaultConfig {
         applicationId "com.test.cmaketest"
-        minSdk 21
-        targetSdk 33
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters rootProject.ext.abiFilters.split(",")
+        }
         externalNativeBuild {
             cmake {
                 cppFlags '-std=c++17'
+                if(rootProject.ext.useASAN) {
+                    arguments "-DANDROID_ARM_MODE=arm"
+                    arguments "-DUSEASAN=ON"
+                }
+                abiFilters rootProject.ext.abiFilters.split(",")
             }
         }
     }
@@ -49,7 +61,7 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version '3.22.1'
+            version rootProject.ext.cmakeVersion
         }
     }
     buildFeatures {
@@ -105,6 +117,15 @@ android {
             jniLibs.srcDirs=['libs']
         }
     }
+
+    packagingOptions {
+        jniLibs {
+            pickFirsts += ['**/*.so']
+        }
+        if (rootProject.ext.useASAN) {
+            doNotStrip "**/*.so"
+        }
+    }
 }
 
 dependencies {
@@ -112,6 +133,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    if (rootProject.ext.dependencyOnLocalLibrary) {
+        System.err.println("implementation project")
+    } else {
+        System.err.println("implementation")
+    }
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'

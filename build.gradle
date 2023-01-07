@@ -17,3 +17,5 @@ def createReleaseTag = tasks.register('createReleaseTag', CreateGitTag) {
 def gitReleaseTag() {
     return "v${version}"
 }
+
+apply from: "android_config.gradle"
