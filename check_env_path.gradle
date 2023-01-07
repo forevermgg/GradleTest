@@ -104,6 +104,9 @@ task checkEnv(dependsOn:[javaVersionCheck,nodeJsVersionCheck,androidNdkHomeCheck
     }
     doLast{
         System.err.println("checkEnv doLast")
+        System.err.println("gitBranch:" + rootProject.ext.gitBranch)
+        System.err.println("gitCommitId:" + rootProject.ext.gitCommitId)
+        System.err.println("gitGitVersionCode:" + rootProject.ext.gitGitVersionCode)
     }
 }
 
