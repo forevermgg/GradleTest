@@ -16,3 +16,4 @@ local.properties
 .idea/*
 app/src/main/thirdparty/*
 /app/src/main/thirdparty/
+/buildSrc/build/

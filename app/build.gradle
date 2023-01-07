@@ -12,6 +12,8 @@ apply from: "${gradle.ext.gradleToolsDir}/androidide/androidide.init.gradle"
 
 System.err.println("project.CommonPlugin.test : ${project.CommonPlugin.ANDROID_SDK_HOME}")
 
+apply plugin: 'com.mgg.plugin'
+
 android {
     namespace 'com.test.cmaketest'
     compileSdk 33

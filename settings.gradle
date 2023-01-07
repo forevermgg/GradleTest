@@ -25,3 +25,4 @@ println("Android Project gradleToolsDir: ${gradleToolsDir}")
 gradle.ext.appRepoDir = appRepo.getCanonicalPath()
 gradle.ext.androidDir = androidRoot.getCanonicalPath()
 gradle.ext.gradleToolsDir = gradleToolsDir.getCanonicalPath()
+include ':Plugin'

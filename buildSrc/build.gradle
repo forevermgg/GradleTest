@@ -1,0 +1,16 @@
+apply plugin: 'groovy'  //必须
+
+dependencies {
+    // Gradle DSL
+    implementation gradleApi() //必须
+    // Groovy DSL
+    implementation localGroovy() //必须
+
+    // Android DSL
+    // implementation 'com.android.tools.build:gradle:3.6.2'
+}
+
+repositories {
+    google()
+    mavenCentral()
+}

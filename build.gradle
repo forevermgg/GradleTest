@@ -4,4 +4,16 @@ plugins {
     id 'com.android.library' version '7.3.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
     id "org.gradle.test-retry" version "1.5.0" apply false
+    id 'org.jetbrains.kotlin.jvm' version '1.7.20' apply false
+}
+version = layout.projectDirectory.file('release/version.txt').asFile.text.trim()
+
+def createReleaseTag = tasks.register('createReleaseTag', CreateGitTag) {
+    // Ensure tag is created only after a successful publishing
+    mustRunAfter('publishPlugins')
+    tagName = gitReleaseTag()
+}
+
+def gitReleaseTag() {
+    return "v${version}"
 }
