@@ -107,7 +107,16 @@ task checkEnv(dependsOn:[javaVersionCheck,nodeJsVersionCheck,androidNdkHomeCheck
         System.err.println("gitBranch:" + rootProject.ext.gitBranch)
         System.err.println("gitCommitId:" + rootProject.ext.gitCommitId)
         System.err.println("gitGitVersionCode:" + rootProject.ext.gitGitVersionCode)
+        System.err.println("adb:" + "which adb".execute().inputStream.readLines()[0])
     }
+}
+// https://blog.csdn.net/wei7017406/article/details/72084727
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+
+def isWindows2() {
+    return System.properties['os.name'].contains('windows')
 }
 
 apply from: rootProject.file('android_config.gradle')

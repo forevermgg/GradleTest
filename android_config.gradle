@@ -26,13 +26,32 @@ def getGitHash() {
     }
 }
 
-static def gitGitVersionCode() {
+def gitGitVersionCode() {
     try {
         return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
     }
     catch (ignored) {
         return 1
     }
+}
+
+static def getCurrentWorkSpaceSystem() {
+    String osName = org.gradle.internal.os.OperatingSystem.current().getName()
+    String osVersion = org.gradle.internal.os.OperatingSystem.current().getVersion()
+    System.err.println("*** $osName $osVersion was detected.")
+
+    /*if (OperatingSystem.current().isLinux()) {
+        // Consider Linux.
+    } else if (OperatingSystem.current().isUnix()) {
+        // Consider UNIX.
+    } else if (OperatingSystem.current().isWindows()) {
+        // Consider Windows.
+    } else if (OperatingSystem.current().isMacOsX()) {
+        // Consider OS X.
+    } else {
+        // Unknown OS.
+    }*/
+    return osName
 }
 
 ext {
@@ -49,6 +68,8 @@ ext {
     gitBranch = getGitBranch()
     gitCommitId = getGitHash()
     gitGitVersionCode = gitGitVersionCode()
+    osName = getCurrentWorkSpaceSystem()
+    parseVersion = "unknow"
 }
 
 /*

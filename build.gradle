@@ -20,3 +20,4 @@ def gitReleaseTag() {
 
 apply from: "init.gradle"
 apply from: "android_config.gradle"
+apply from: "properties.gradle"

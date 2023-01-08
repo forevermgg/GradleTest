@@ -6,6 +6,7 @@ class CommonPlugin implements Plugin<Project> {
         } else {
             System.err.println("Gradle version is ${project.gradle.gradleVersion}")
         }
+
         project.extensions.create("CommonPlugin", CommonPluginExtension)
         def isApp = project.getPluginManager().hasPlugin("com.android.application")
         def isLibrary = project.getPluginManager().hasPlugin("com.android.library")
