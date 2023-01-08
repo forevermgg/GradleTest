@@ -1,0 +1,59 @@
+
+System.err.println("ENVIRONMENTAL:${System.getenv('ENVIRONMENTAL')}")
+println providers.environmentVariable('JAVA_HOME').get()
+System.err.println("ENVIRONMENTAL:${providers.environmentVariable('JAVA_HOME').get()}")
+
+System.err.println("project.rootDir:${project.rootDir}")
+System.err.println("project.projectDir:${project.projectDir}")
+System.err.println("project.buildDir:${project.buildDir}")
+System.err.println("project.name:${project.name}")
+System.err.println("project.description:${project.description}")
+System.err.println("project.group:${project.group}")
+
+// Querying the presence of a project property
+if (hasProperty('app')) {
+    // Accessing the value, throws if not present
+    println property('app')
+}
+if (project.hasProperty("isCI")) {
+    println("Performing release actions")
+} else {
+    // https://docs.gradle.org/current/userguide/build_environment.html
+    // throw new InvalidUserDataException("Cannot perform release outside of CI")
+}
+
+def jdkLocations = System.getenv().findAll {
+    key, _ -> key.startsWith("JDK_")
+}
+System.err.println("jdkLocations:${jdkLocations}")
+
+def jdkVariables = ["JDK_8", "JDK_11", "JDK_17"]
+def jdkLocations2 = jdkVariables.findAll { v ->
+    System.getenv(v) != null
+}.collectEntries { v ->
+    System.err.println("jdkLocations:${v}")
+    [v, System.getenv(v)]
+}
+System.err.println("jdkLocations2:${jdkLocations2}")
+
+def getGitBranch = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+System.err.println("getGitBranch:${getGitBranch.call()}")
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'log', '--pretty=format:%h', '-n 1'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+System.err.println("getGitHash:${getGitHash.call()}")
+// get required project properties now to enable configuration cache
+final boolean isOffline = getProject().getGradle().getStartParameter().isOffline();
+System.err.println("isOffline:${isOffline}")

@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -131,6 +133,10 @@ android {
             doNotStrip "**/*.so"
         }
     }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {
@@ -151,12 +157,39 @@ dependencies {
 }
 
 tasks.register("testPy", Exec) {
-    System.err.println("checkString")
-    System.err.println("checkString workingDir:${workingDir}")
-    // https://www.icoding.co/2020/06/android-gradle-task-i18n-check
-    commandLine "python3", "test.py"
-    workingDir = "${rootProject.projectDir}/python"
-    System.err.println("checkString workingDir:${workingDir}")
+    System.err.println("testPy")
+    System.err.println("testPy CurrentWorkingDir:${workingDir}")
+    commandLine 'python3', "${rootProject.projectDir}/python/test.py"
+    standardOutput = new ByteArrayOutputStream()
+    errorOutput = new ByteArrayOutputStream()
+    doLast {
+        System.err.println(errorOutput.toString())
+        /*exec {
+            commandLine 'python3', "${rootProject.projectDir}/python/test.py"
+            standardOutput = stdout
+        }*/
+        System.err.println("testPy stdout:${standardOutput.toString().trim()}")
+        def output = standardOutput.toString()
+        System.err.println("testPy doLast output:${output}")
+        def json = new JsonSlurper().parseText(output)
+        def is_error = json.is_error
+        def is_warning = json.is_warning
+        def error = json.error
+        def warning = json.warning
+        System.err.println("warning:" + warning)
+        System.err.println("error:" + error)
+
+        System.err.println("is_warning:" + is_warning)
+        System.err.println("is_error:" + is_error)
+        if (is_error) {
+            System.err.println("error:" + error)
+            throw new TaskExecutionException(it, new Exception(error.join('\n')))
+        }
+
+        if (is_warning) {
+            System.err.println(warning.join('\n'))
+        }
+    }
 }
 
 //这个task 需要放在 app/build.gradle文件中的android 代码块里

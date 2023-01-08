@@ -26,7 +26,7 @@ def getGitHash() {
     }
 }
 
-def gitGitVersionCode() {
+static def gitGitVersionCode() {
     try {
         return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
     }
@@ -51,6 +51,7 @@ ext {
     gitGitVersionCode = gitGitVersionCode()
 }
 
+/*
 qci {
     iSCI = false
-}
+}*/

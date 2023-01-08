@@ -18,4 +18,5 @@ def gitReleaseTag() {
     return "v${version}"
 }
 
+apply from: "init.gradle"
 apply from: "android_config.gradle"

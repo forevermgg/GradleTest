@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.3.1" type="baseline" client="gradle" dependencies="false" name="AGP (7.3.1)" variant="all" version="7.3.1">
+
+    <issue
+        id="StringFormatInvalid"
+        message="Incorrect formatting string `sample_text`; missing conversion character in &apos;`% s`&apos;?"
+        errorLine1="    &lt;string name=&quot;sample_text&quot;>sample text with format: % s&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StringFormatCount"
+        message="Inconsistent number of arguments in formatting string `sample_text`; found both 1 here and 0 in values-zh-rTW/strings.xml"
+        errorLine1="    &lt;string name=&quot;sample_text&quot;>sample text with format: % s&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="5"/>
+        <location
+            file="src/main/res/values-zh-rTW/strings.xml"
+            line="4"
+            column="5"
+            message="Conflicting number of arguments (0) here"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.sample_text` appears to be unused"
+        errorLine1="    &lt;string name=&quot;sample_text&quot;>sample text with format: % s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+</issues>
