@@ -1,0 +1,122 @@
+import org.codehaus.groovy.reflection.android.AndroidSupport
+
+task javaVersionCheck() {
+    group 'Verification'
+    description 'Ensures the current Java version is supported'
+
+    doFirst {
+        def supportedJavaVersions = [JavaVersion.VERSION_11]
+        def currentJavaVersion = JavaVersion.current()
+        System.err.println("currentJavaVersion:" + currentJavaVersion)
+        if (!supportedJavaVersions.contains(currentJavaVersion)) {
+            throw new GradleException("Incorrect Java version; found ${currentJavaVersion} but supported versions are:  ${supportedJavaVersions}")
+        }
+        logger.lifecycle("Java version OK:  ${currentJavaVersion}")
+    }
+}
+
+task nodeJsVersionCheck() {
+    group 'Verification'
+    description 'Ensures the current NodeJs version is supported'
+    doFirst {
+        def out = new ByteArrayOutputStream()
+        def cmd = 'node -v'
+        exec {
+            ExecSpec execSpec ->
+                executable 'bash'
+                args '-c', cmd
+                standardOutput = out
+        }
+        String version = out.toString()
+        System.err.println("node -v:" + version)
+        version = version.replace("v", "")
+        version = version.replace(".", "@")
+        String[] versionSplit = version.split("@")
+        System.err.println("node -v:" + Integer.valueOf(versionSplit[0]).intValue())
+        if (Integer.valueOf(versionSplit[0]).intValue() < 15) {
+            throw new GradleException("Incorrect NodeJs version; found ${out.toString()} but supported versions are >= 16")
+        }
+        logger.lifecycle("NodeJs version OK:  ${out.toString()}")
+    }
+}
+
+task androidNdkHomeCheck() {
+    doFirst {
+        String ANDROID_NDK_HOME = android.ndkDirectory.absolutePath
+        if (ANDROID_NDK_HOME.isEmpty()) {
+            throw new GradleException("Incorrect ANDROID_NDK_HOME ENV Path!")
+        }
+        System.err.println("ANDROID_NDK_HOME:" + ANDROID_NDK_HOME)
+        logger.lifecycle("ANDROID_NDK_HOME OK")
+    }
+}
+
+task cmakeVersionCheck() {
+    doFirst {
+        String ANDROID_NDK_HOME = android.ndkDirectory.absolutePath
+        String cmakePath = ANDROID_NDK_HOME + "/../../cmake/"
+        System.err.println("cmakePath:" + cmakePath)
+        File file = new File(cmakePath)
+        File[] result = file.listFiles()
+        if (result.size() <= 0) {
+            throw new GradleException("Incorrect ANDROID_NDK_HOME Cmake Version")
+        }
+        boolean checkResult = false
+        for (int i = 0; i < result.length; i++) {
+            File fs = result[i]
+            if (fs.isDirectory()) {
+                System.err.println("Cmake Version:" + fs.getName())
+                if (fs.getName() == rootProject.ext.cmakeVersion) {
+                    System.err.println("gradle.ext.cmakeVersion:" + rootProject.ext.cmakeVersion)
+                    checkResult = true
+                }
+            }
+        }
+        if (!checkResult) {
+            throw new GradleException("Incorrect ANDROID_NDK_HOME Cmake Version, supported versions are: ${rootProject.ext.cmakeVersion}.")
+        }
+        logger.lifecycle("ANDROID_NDK_HOME cmake version OK:  ${rootProject.ext.cmakeVersion}")
+    }
+}
+
+task checkPython() {
+    doFirst {
+        def out = new ByteArrayOutputStream()
+        def cmd = 'which python3'
+        exec {
+            ExecSpec execSpec ->
+                executable 'bash'
+                args '-c', cmd
+                standardOutput = out
+        }
+        String result = out.toString()
+        if (result.isEmpty() || !result.contains("python3")) {
+            throw new GradleException("We Need python3")
+        }
+        logger.lifecycle("Python checck OK:  ${out.toString()}")
+    }
+}
+
+task checkEnv(dependsOn:[javaVersionCheck,nodeJsVersionCheck,androidNdkHomeCheck,cmakeVersionCheck,checkPython]){
+    System.err.println("checkEnv")
+    doFirst{
+        System.err.println("checkEnv doFirst")
+    }
+    doLast{
+        System.err.println("checkEnv doLast")
+        System.err.println("gitBranch:" + rootProject.ext.gitBranch)
+        System.err.println("gitCommitId:" + rootProject.ext.gitCommitId)
+        System.err.println("gitGitVersionCode:" + rootProject.ext.gitGitVersionCode)
+        System.err.println("adb:" + "which adb".execute().inputStream.readLines()[0])
+    }
+}
+// https://blog.csdn.net/wei7017406/article/details/72084727
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+
+def isWindows2() {
+    return System.properties['os.name'].contains('windows')
+}
+
+apply from: rootProject.file('android_config.gradle')

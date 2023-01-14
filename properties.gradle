@@ -1,0 +1,13 @@
+def getPropertyValue(propertyKey, propertyDefaultValue) {
+    Properties properties = new Properties()
+    File gradle_properties = project.file('gradle.properties');
+    if (gradle_properties.exists()) {
+        properties.load(project.file('gradle.properties').newDataInputStream())
+        return properties.getProperty(propertyKey)
+    } else {
+        return propertyDefaultValue
+    }
+}
+
+System.err.println("org.gradle.jvmargs:" + getPropertyValue("org.gradle.jvmargs", ""))
+System.err.println("kotlin.code.style:" + getPropertyValue("kotlin.code.style", ""))

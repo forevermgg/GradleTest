@@ -6,6 +6,7 @@ class CommonPlugin implements Plugin<Project> {
         } else {
             System.err.println("Gradle version is ${project.gradle.gradleVersion}")
         }
+
         project.extensions.create("CommonPlugin", CommonPluginExtension)
         def isApp = project.getPluginManager().hasPlugin("com.android.application")
         def isLibrary = project.getPluginManager().hasPlugin("com.android.library")
@@ -31,6 +32,11 @@ class CommonPluginExtension {
     String ANDROID_SDK_HOME = System.getenv("ANDROID_HOME")
     String ANDROID_NDK_HOME = System.getenv("ANDROID_NDK")
     String JAVA_HOME = System.getenv("JAVA_HOME")
+
+    def printCommonPluginExtensionFiled() {
+        logError(ANDROID_SDK_HOME)
+        logError(ANDROID_NDK_HOME)
+    }
 }
 
 static def log(String text) {
