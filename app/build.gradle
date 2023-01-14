@@ -20,6 +20,8 @@ apply from: rootProject.file('gradle/Sanitizer.gradle')
 
 System.err.println("project.CommonPlugin.test : ${project.CommonPlugin.ANDROID_SDK_HOME}")
 System.err.println("Check gitVersion :" + gitVersion())
+def details = versionDetails()
+System.err.println("Check VersionDetails :" + details)
 
 apply plugin: 'com.mgg.plugin'
 

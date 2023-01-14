@@ -1,7 +1,7 @@
 
 System.err.println("ENVIRONMENTAL:${System.getenv('ENVIRONMENTAL')}")
-println providers.environmentVariable('JAVA_HOME').get()
-System.err.println("ENVIRONMENTAL:${providers.environmentVariable('JAVA_HOME').get()}")
+// println providers.environmentVariable('JAVA_HOME').get()
+// System.err.println("ENVIRONMENTAL:${providers.environmentVariable('JAVA_HOME').get()}")
 
 System.err.println("project.rootDir:${project.rootDir}")
 System.err.println("project.projectDir:${project.projectDir}")
