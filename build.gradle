@@ -9,10 +9,6 @@ plugins {
     // id "com.jetbrains.python.envs" version "0.0.31" apply false
 }
 
-// project.version = gitVersion()
-// System.err.println("project.version :" + project.version)
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20' apply false
-}
 version = layout.projectDirectory.file('release/version.txt').asFile.text.trim()
 
 def createReleaseTag = tasks.register('createReleaseTag', CreateGitTag) {
