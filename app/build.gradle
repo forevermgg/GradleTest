@@ -4,6 +4,9 @@ plugins {
 }
 
 apply plugin: "org.gradle.test-retry"
+apply plugin: "com.palantir.git-version"
+// apply plugin: "com.jetbrains.node.envs"
+// apply plugin: "com.jetbrains.python.envs"
 
 apply from: "${gradle.ext.gradleToolsDir}/TestPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/GreetingPlugin.gradle"
@@ -11,6 +14,7 @@ apply from: "${gradle.ext.gradleToolsDir}/CommonPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/androidide/androidide.init.gradle"
 
 System.err.println("project.CommonPlugin.test : ${project.CommonPlugin.ANDROID_SDK_HOME}")
+System.err.println("Check gitVersion :" + gitVersion())
 
 android {
     namespace 'com.test.cmaketest'
