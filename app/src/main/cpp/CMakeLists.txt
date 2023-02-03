@@ -4,6 +4,16 @@
 # Sets the minimum version of CMake required to build the native library.
 
 cmake_minimum_required(VERSION 3.10.2)
+# https://www.bookstack.cn/read/CMake-Cookbook/content-chapter7-7.2-chinese.md
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(colors)
+define_colors()
+
+message("This is a normal message")
+message("${Red}This is a red${ColourReset}")
+message("${BoldRed}This is a bold red${ColourReset}")
+message("${Green}This is a green${ColourReset}")
+message("${BoldMagenta}This is bold${ColourReset}")
 
 # https://www.kancloud.cn/csyangbinbin/cmake-cookbook1/2157928
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
