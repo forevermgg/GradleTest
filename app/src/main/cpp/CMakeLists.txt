@@ -47,6 +47,7 @@ ELSE ()
     # do whatever
 ENDIF()
 
+# brew install graphviz
 # Declares and names the project.
 
 project("cmaketest")
@@ -115,7 +116,18 @@ find_library( # Sets the name of the path variable.
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
-
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_compile_definitions(cmaketest PUBLIC "LINUX")
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    target_compile_definitions(cmaketest PUBLIC "MACOS")
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_compile_definitions(cmaketest PUBLIC "WINDOWS")
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+    target_compile_definitions(cmaketest PUBLIC "Android")
+endif()
 target_link_libraries( # Specifies the target library.
         cmaketest
 
