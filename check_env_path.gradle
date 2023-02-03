@@ -33,7 +33,7 @@ task nodeJsVersionCheck() {
         version = version.replace(".", "@")
         String[] versionSplit = version.split("@")
         System.err.println("node -v:" + Integer.valueOf(versionSplit[0]).intValue())
-        if (Integer.valueOf(versionSplit[0]).intValue() < 15) {
+        if (Integer.valueOf(versionSplit[0]).intValue() < 12) {
             throw new GradleException("Incorrect NodeJs version; found ${out.toString()} but supported versions are >= 16")
         }
         logger.lifecycle("NodeJs version OK:  ${out.toString()}")

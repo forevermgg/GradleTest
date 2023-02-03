@@ -45,3 +45,4 @@ if __name__ == '__main__':
     succeed_msg = "succeed - '{}'\n".format(200)
     succeed_handler(succeed_msg)
     print(json.dumps(check_result))
+    # raise Exception("Py Exception")

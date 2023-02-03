@@ -5,6 +5,48 @@
 
 cmake_minimum_required(VERSION 3.10.2)
 
+# https://www.kancloud.cn/csyangbinbin/cmake-cookbook1/2157928
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message("Configuring on/for Linux")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    message("Configuring on/for macOS")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message("Configuring on/for Windows")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "AIX")
+    message("Configuring on/for IBM AIX")
+else()
+    message("Configuring on/for ${CMAKE_SYSTEM_NAME}")
+endif()
+
+find_package(PythonInterp REQUIRED)
+# https://www.ljjyy.com/archives/2021/03/100654.html
+execute_process(
+        COMMAND
+        ${PYTHON_EXECUTABLE} "-c" "print('Hello, world!')"
+        RESULT_VARIABLE _status
+        OUTPUT_VARIABLE _hello_world
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+message("RESULT_VARIABLE is: ${_status}")
+message("OUTPUT_VARIABLE is: ${_hello_world}")
+
+message("PYTHON WORKING_DIRECTORY:" "${CMAKE_CURRENT_SOURCE_DIR}/../../../../python")
+
+execute_process(
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/../../../../python/test.py"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        RESULT_VARIABLE script_result
+        OUTPUT_VARIABLE script_output)
+message("script_result is: ${script_result}")
+message("script_output is: ${script_output}")
+IF(NOT "${script_result}" STREQUAL 0)
+    MESSAGE(FATAL_ERROR "Failed to run python script")
+ELSE ()
+    # do whatever
+ENDIF()
+
 # Declares and names the project.
 
 project("cmaketest")
