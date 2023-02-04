@@ -7,6 +7,10 @@ cmake_minimum_required(VERSION 3.10.2)
 # https://www.bookstack.cn/read/CMake-Cookbook/content-chapter7-7.2-chinese.md
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(colors)
+include(PlatformCheck)
+include(GitInfoConfig)
+include(IncludeWhatYouUse)
+include(TimeTrace)
 define_colors()
 
 message("This is a normal message")

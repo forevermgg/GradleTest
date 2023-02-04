@@ -1,0 +1,8 @@
+message("CMAKE_CXX_COMPILER_ID:" ${CMAKE_CXX_COMPILER_ID})
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+    option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" ON)
+    message("ENABLE_BUILD_WITH_TIME_TRACE:" ${ENABLE_BUILD_WITH_TIME_TRACE})
+    if(ENABLE_BUILD_WITH_TIME_TRACE)
+        add_compile_options(-ftime-trace)
+    endif()
+endif()
