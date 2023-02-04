@@ -9,7 +9,7 @@ std::string say_hello() {
 #elif MACOS
     return std::string("Hello from macOS!");
 #elif Android
-    return std::string("Hello from Android!");
+    return {"Hello from Android!"};
 #else
     return std::string("Hello from an unknown system!");
 #endif
