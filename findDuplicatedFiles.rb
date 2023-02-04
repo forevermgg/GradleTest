@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# https://droidyue.com/blog/2022/05/15/how-to-find-duplicated-file-via-one-script/
 # encoding: utf-8
 require 'find'
 require 'digest/md5'
