@@ -6,10 +6,12 @@
 // kill -9 PID
 // 如果你想杀死所有的节点进程，那就这样做：
 // killall -9 node
-
+// ps aux | grep node | awk '$12~/watchfile.js/{print $2}'
 // Import the filesystem module
 const fs = require('fs');
-
+console.log(`Process ID: ${process.pid}`);
+process.on('SIGHUP', () => console.log('Received: SIGHUP'));
+process.on('SIGINT', () => console.log('Received: SIGINT'));
 fs.watch("/Users/centforever/AndroidStudioProjects/GradleTest/sdk.json", (eventType, filename) => {
   console.log("The file", filename, "was modified,The type of change was:", eventType);
 });
