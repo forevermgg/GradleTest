@@ -8,8 +8,6 @@ plugins {
 apply from: rootProject.file('check_env_path.gradle')
 apply plugin: "org.gradle.test-retry"
 apply plugin: "com.palantir.git-version"
-// apply plugin: "com.jetbrains.node.envs"
-// apply plugin: "com.jetbrains.python.envs"
 
 apply from: "${gradle.ext.gradleToolsDir}/TestPlugin.gradle"
 apply from: "${gradle.ext.gradleToolsDir}/GreetingPlugin.gradle"
