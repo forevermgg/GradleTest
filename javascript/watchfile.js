@@ -23,6 +23,7 @@ process.on("SIGINT", () => {
   })
 })
 file="/Users/centforever/AndroidStudioProjects/GradleTest/sdk.json";
+// https://dandelioncloud.cn/article/details/1525667296043614210
 fs.watch(file,{ interval }, (eventType, filename) => {
   if (eventType == 'change') {
     console.log("The file", filename, "was modified,The type of change was:", eventType);
