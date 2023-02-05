@@ -149,7 +149,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-
+    implementation("io.methvin:directory-watcher:0.17.3")
     if (rootProject.ext.dependencyOnLocalLibrary) {
         System.err.println("implementation project")
     } else {
