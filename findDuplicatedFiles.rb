@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 # https://droidyue.com/blog/2022/05/15/how-to-find-duplicated-file-via-one-script/
+# 一个脚本，快速发现项目中的重复文件
+# 项目中的文件越来愈多，导致生成的apk包也不断增大，可是这些文件中会不会存在重复的文件呢，这是一个值得验证的问题，毕竟解决了之后会减少很多apk的体积。
+
+# 我们不可能依赖人工的手动查找，因为这样是时间成本太大。于是我们再次尝试使用脚本程序来实现检查项目中是否有重复文件。
 # encoding: utf-8
 require 'find'
 require 'digest/md5'
