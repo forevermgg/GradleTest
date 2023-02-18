@@ -119,6 +119,21 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
+        load_library.cpp
+        java_class.cpp
+        java_class.hpp
+        java_class_global_def.hpp
+        java_global_ref_by_copy.cpp
+        java_global_ref_by_copy.hpp
+        java_global_ref_by_move.cpp
+        java_global_ref_by_move.hpp
+        java_global_weak_ref.cpp
+        java_global_weak_ref.hpp
+        java_local_ref.hpp
+        java_method.hpp
+        java_method.cpp
+        jni_utils.cpp
+        jni_utils.hpp
         native-lib.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a

@@ -44,7 +44,6 @@ android {
             cmake {
                 cppFlags '-std=c++17'
                 if(rootProject.ext.useASAN) {
-                    arguments "-DANDROID_ARM_MODE=arm"
                     arguments "-DUSEASAN=ON"
                 }
                 abiFilters rootProject.ext.abiFilters.split(",")
