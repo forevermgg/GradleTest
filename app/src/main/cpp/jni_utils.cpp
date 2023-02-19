@@ -1,6 +1,9 @@
 #include "jni_utils.hpp"
 
+#include <map>
 #include <memory>
+#include <string>
+#include <string_view>
 
 #include "java_class.hpp"
 #include "java_method.hpp"
@@ -42,4 +45,27 @@ void JniUtils::detach_current_thread() {
 
 void JniUtils::keep_global_ref(JavaGlobalRefByMove& ref) {
   s_instance->m_global_refs.push_back(std::move(ref));
+}
+
+jobject JniUtils::to_hash_map(JNIEnv* env,
+                              std::map<std::string, std::string> map_data) {
+  static JavaClass hash_map_class(env, "java/util/HashMap");
+  static JavaMethod hash_map_constructor(env, hash_map_class, "<init>", "(I)V");
+  static JavaMethod hash_map_put(
+      env, hash_map_class, "put",
+      "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+
+  jobject hash_map = env->NewObject(hash_map_class, hash_map_constructor,
+                                    (jint)map_data.size());
+  for (const auto& it : map_data) {
+    jstring key = env->NewStringUTF(it.first.c_str());
+    jstring value = env->NewStringUTF(it.second.c_str());
+
+    env->CallObjectMethod(hash_map, hash_map_put, key, value);
+
+    env->DeleteLocalRef(key);
+    env->DeleteLocalRef(value);
+  }
+
+  return hash_map;
 }

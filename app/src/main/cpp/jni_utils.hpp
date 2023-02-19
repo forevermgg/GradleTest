@@ -30,6 +30,8 @@ class JniUtils {
   static void detach_current_thread();
   // Keep the given global reference until JNI_OnUnload is called.
   static void keep_global_ref(JavaGlobalRefByMove& ref);
+  static jobject to_hash_map(JNIEnv* env,
+                             std::map<std::string, std::string> map);
 
  private:
   JniUtils(JavaVM* vm, jint vm_version) noexcept

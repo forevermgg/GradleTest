@@ -1,13 +1,19 @@
 package com.test.cmaketest
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.test.cmaketest.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ConnectionListener {
 
     private lateinit var binding: ActivityMainBinding
+
+    private var token: Long = 0
+
+    private var nativePtr: Long = 0
+
+    private var mSyncNetWorkState: SyncNetWorkState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,6 +23,31 @@ class MainActivity : AppCompatActivity() {
 
         // Example of a call to a native method
         binding.sampleText.text = stringFromJNI()
+        nativePtr = createListener()
+        mSyncNetWorkState = SyncNetWorkState(nativePtr)
+        mSyncNetWorkState?.addConnectionChangeListener(this)
+    }
+
+    companion object {
+        // Used to load the 'cmaketest' library on application startup.
+        init {
+            System.loadLibrary("cmaketest")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        execListener(nativePtr)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        execListener(nativePtr)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mSyncNetWorkState?.removeConnectionChangeListener(this)
     }
 
     /**
@@ -25,10 +56,13 @@ class MainActivity : AppCompatActivity() {
      */
     external fun stringFromJNI(): String
 
-    companion object {
-        // Used to load the 'cmaketest' library on application startup.
-        init {
-            System.loadLibrary("cmaketest")
-        }
+    external fun createListener(): Long
+    external fun execListener(ptr: Long)
+    fun onChange(oldState: Long, newState: Long) {
+        Log.e("ConnectionState", "oldState:$oldState newState:$newState")
+    }
+
+    override fun onChange(oldState: ConnectionState?, newState: ConnectionState?) {
+        Log.e("ConnectionState", "oldState:$oldState newState:$newState")
     }
 }

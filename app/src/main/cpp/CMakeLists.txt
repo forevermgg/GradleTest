@@ -117,9 +117,11 @@ add_library( # Sets the name of the library.
 
         # Sets the library as a shared library.
         SHARED
-
+        Java_com_test_cmaketest_SyncSession.cpp
         # Provides a relative path to your source file(s).
         load_library.cpp
+        connection_change_notifier.hpp
+        connection_change_notifier.cpp
         java_class.cpp
         java_class.hpp
         java_class_global_def.hpp
@@ -134,7 +136,8 @@ add_library( # Sets the name of the library.
         java_method.cpp
         jni_utils.cpp
         jni_utils.hpp
-        native-lib.cpp)
+        native-lib.cpp
+        NativeObjectReference.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
