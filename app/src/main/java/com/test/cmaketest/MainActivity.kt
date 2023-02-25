@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity(), ConnectionListener {
         nativePtr = createListener()
         mSyncNetWorkState = SyncNetWorkState(nativePtr)
         mSyncNetWorkState?.addConnectionChangeListener(this)
+
+        val capabilities: Capabilities = AndroidCapabilities()
+        val foreverNotifier: ForeverNotifier = AndroidForeverNotifier(capabilities)
+        createJavaBindingContext(foreverNotifier)
     }
 
     companion object {
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity(), ConnectionListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        destroyJavaBindingContext()
         mSyncNetWorkState?.removeConnectionChangeListener(this)
     }
 
@@ -61,6 +66,10 @@ class MainActivity : AppCompatActivity(), ConnectionListener {
     fun onChange(oldState: Long, newState: Long) {
         Log.e("ConnectionState", "oldState:$oldState newState:$newState")
     }
+
+    external fun createJavaBindingContext(notifier: ForeverNotifier)
+
+    external fun destroyJavaBindingContext()
 
     override fun onChange(oldState: ConnectionState?, newState: ConnectionState?) {
         Log.e("ConnectionState", "oldState:$oldState newState:$newState")

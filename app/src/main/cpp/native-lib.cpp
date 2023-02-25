@@ -2,10 +2,13 @@
 
 #include <string>
 
+#include "binding_context.hpp"
 #include "connection_change_notifier.hpp"
+#include "java_binding_context.hpp"
 #include "java_class.hpp"
 #include "java_method.hpp"
 #include "jni_utils.hpp"
+#include "uuid.hpp"
 
 std::string say_hello() {
 #ifdef WINDOWS
@@ -22,16 +25,16 @@ std::string say_hello() {
 }
 
 FOREVER::ConnectionChangeNotifier m_connection_change_notifier_;
-
+std::unique_ptr<FOREVER::BindingContext> m_binding_context_;
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_test_cmaketest_MainActivity_stringFromJNI(JNIEnv *env,
                                                    jobject /* this */) {
-  std::string hello = say_hello();
+  std::string hello = say_hello() + FOREVER::UTIL::uuid_string();
   return env->NewStringUTF(hello.c_str());
 }
 
 extern "C" JNIEXPORT jlong JNICALL
-Java_com_test_cmaketest_MainActivity_createListener(JNIEnv *env, jobject thiz) {
+Java_com_test_cmaketest_MainActivity_createListener(JNIEnv *env, jobject) {
   std::map<std::string, std::string> headers;
   headers["1"] = "1";
   jobject j_headers = FOREVER::JNI_UTIL::JniUtils::to_hash_map(env, headers);
@@ -56,6 +59,10 @@ Java_com_test_cmaketest_MainActivity_execListener(JNIEnv *env, jobject thiz,
   auto test = reinterpret_cast<FOREVER::ConnectionChangeNotifier *>(ptr);
   test->invoke_callbacks(FOREVER::ConnectionState::Connected,
                          FOREVER::ConnectionState::Disconnected);
+
+  if (m_binding_context_) {
+    m_binding_context_->before_notify();
+  }
 }
 
 extern "C" JNIEXPORT jlong JNICALL
@@ -100,3 +107,19 @@ Java_com_test_cmaketest_SyncNetWorkState_nativeRemoveConnectionListener(
 extern "C" JNIEXPORT jbyte JNICALL
 Java_com_test_cmaketest_SyncNetWorkState_nativeGetConnectionState(
     JNIEnv *env, jclass clazz, jlong app_native_pointer) {}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_test_cmaketest_MainActivity_createJavaBindingContext(
+    JNIEnv *env, jobject thiz, jobject forever_notifier) {
+  m_binding_context_ =
+      FOREVER::_impl::JavaBindingContext::create(env, forever_notifier);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_test_cmaketest_MainActivity_destroyJavaBindingContext(JNIEnv *env,
+                                                               jobject thiz) {
+  if (m_binding_context_) {
+    m_binding_context_.release();
+    m_binding_context_ = nullptr;
+  }
+}

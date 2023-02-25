@@ -19,6 +19,9 @@ class JavaClassGlobalDef {
         m_java_lang_string(env, "java/lang/String", false),
         m_java_lang_boolean(env, "java/lang/Boolean", false),
         m_java_lang_object(env, "java/lang/Object", false),
+        m_forever_notifier(env, "com/test/cmaketest/ForeverNotifier", false),
+        m_bson_decimal128(env, "org/bson/types/Decimal128", false),
+        m_bson_object_id(env, "org/bson/types/ObjectId", false),
         m_java_util_uuid(env, "java/util/UUID", false) {}
 
   JNI_UTIL::JavaClass m_java_lang_long;
@@ -29,6 +32,9 @@ class JavaClassGlobalDef {
   JNI_UTIL::JavaClass m_java_lang_boolean;
   JNI_UTIL::JavaClass m_java_lang_object;
 
+  JNI_UTIL::JavaClass m_forever_notifier;
+  JNI_UTIL::JavaClass m_bson_decimal128;
+  JNI_UTIL::JavaClass m_bson_object_id;
   JNI_UTIL::JavaClass m_java_util_uuid;
 
   inline static std::unique_ptr<JavaClassGlobalDef>& instance() {
@@ -101,6 +107,11 @@ class JavaClassGlobalDef {
   // java.lang.Object
   inline static const JNI_UTIL::JavaClass& java_lang_object() {
     return instance()->m_java_lang_object;
+  }
+
+  // io.realm.internal.RealmNotifier
+  inline static const JNI_UTIL::JavaClass& forever_notifier() {
+    return instance()->m_forever_notifier;
   }
 };
 

@@ -7,6 +7,7 @@
 
 #include "java_class.hpp"
 #include "java_method.hpp"
+#include "string_conversion.h"
 
 using namespace FOREVER::JNI_UTIL;
 
@@ -45,6 +46,21 @@ void JniUtils::detach_current_thread() {
 
 void JniUtils::keep_global_ref(JavaGlobalRefByMove& ref) {
   s_instance->m_global_refs.push_back(std::move(ref));
+}
+
+std::string JniUtils::JavaStringToString(JNIEnv* env, jstring str) {
+  if (env == nullptr || str == nullptr) {
+    return "";
+  }
+  const jchar* chars = env->GetStringChars(str, NULL);
+  if (chars == nullptr) {
+    return "";
+  }
+  std::u16string u16_string(reinterpret_cast<const char16_t*>(chars),
+                            env->GetStringLength(str));
+  std::string u8_string = FOREVER::Utf16ToUtf8(u16_string);
+  env->ReleaseStringChars(str, chars);
+  return u8_string;
 }
 
 jobject JniUtils::to_hash_map(JNIEnv* env,

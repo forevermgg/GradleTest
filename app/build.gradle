@@ -154,6 +154,8 @@ dependencies {
     } else {
         System.err.println("implementation")
     }
+    implementation 'com.getkeepsafe.relinker:relinker:1.4.3'
+    implementation "org.mongodb:bson:3.12.1"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

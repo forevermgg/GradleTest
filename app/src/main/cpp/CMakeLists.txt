@@ -117,14 +117,21 @@ add_library( # Sets the name of the library.
 
         # Sets the library as a shared library.
         SHARED
-        Java_com_test_cmaketest_SyncSession.cpp
+        app.hpp
+        app.cpp
+        binding_context.hpp
+        checked_mutex.hpp
         # Provides a relative path to your source file(s).
-        load_library.cpp
         connection_change_notifier.hpp
         connection_change_notifier.cpp
+        java_binding_context.hpp
+        java_binding_context.cpp
         java_class.cpp
         java_class.hpp
         java_class_global_def.hpp
+        java_class_global_def.cpp
+        Java_com_test_cmaketest_OsApp.cpp
+        Java_com_test_cmaketest_SyncSession.cpp
         java_global_ref_by_copy.cpp
         java_global_ref_by_copy.hpp
         java_global_ref_by_move.cpp
@@ -136,8 +143,15 @@ add_library( # Sets the name of the library.
         java_method.cpp
         jni_utils.cpp
         jni_utils.hpp
+        load_library.cpp
         native-lib.cpp
-        NativeObjectReference.cpp)
+        NativeObjectReference.cpp
+        string_conversion.h
+        string_conversion.cc
+        android/scheduler.hpp
+        uuid.hpp
+        uuid.cpp
+        wrap_err.hpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
