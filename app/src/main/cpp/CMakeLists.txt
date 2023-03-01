@@ -144,6 +144,7 @@ add_library( # Sets the name of the library.
         jni_utils.cpp
         jni_utils.hpp
         load_library.cpp
+        managed.cc
         native-lib.cpp
         NativeObjectReference.cpp
         string_conversion.h
