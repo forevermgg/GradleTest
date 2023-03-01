@@ -150,6 +150,7 @@ add_library( # Sets the name of the library.
         string_conversion.h
         string_conversion.cc
         android/scheduler.hpp
+        U16String.cc
         uuid.hpp
         uuid.cpp
         wrap_err.hpp)
