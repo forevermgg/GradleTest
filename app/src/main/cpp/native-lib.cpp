@@ -3,6 +3,7 @@
 #include <latch>
 #include <string>
 
+#include "TestData.h"
 #include "binding_context.hpp"
 #include "connection_change_notifier.hpp"
 #include "java_binding_context.hpp"
@@ -29,6 +30,10 @@ std::string say_hello() {
 
 FOREVER::ConnectionChangeNotifier m_connection_change_notifier_;
 std::unique_ptr<FOREVER::BindingContext> m_binding_context_;
+std::shared_ptr<TestData> m_test_data_;
+
+TestData m_test_data2_;
+
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_test_cmaketest_MainActivity_stringFromJNI(JNIEnv *env,
                                                    jobject /* this */) {
@@ -41,6 +46,22 @@ Java_com_test_cmaketest_MainActivity_createListener(JNIEnv *env, jobject) {
   std::map<std::string, std::string> headers;
   headers["1"] = "1";
   jobject j_headers = FOREVER::JNI_UTIL::JniUtils::to_hash_map(env, headers);
+  ThreadLatch wait_done;
+  ThreadPool pool(1);
+  m_test_data_ = std::make_shared<TestData>();
+  auto weak_this = m_test_data_->weak_from_this();
+  pool.PostTask([&wait_done, weak_this]() mutable {
+    auto strong = weak_this.lock();
+    if (strong) {
+      strong->test = 1;
+    }
+    wait_done.task_started = true;
+    wait_done.notify.Notify();
+  });
+  wait_done.notify.Wait();
+  m_test_data_->TestExec();
+  int test = m_test_data_->test;
+  int test2 = m_test_data2_.test;
   return reinterpret_cast<jlong>(&m_connection_change_notifier_);
 }
 

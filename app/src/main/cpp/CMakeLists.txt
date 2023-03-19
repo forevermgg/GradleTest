@@ -151,6 +151,8 @@ add_library( # Sets the name of the library.
         string_conversion.cc
         android/scheduler.hpp
         task_runner.h
+        TestData.h
+        TestData.cpp
         thread_pool.cpp
         thread_pool.hpp
         thread_pool.cpp

@@ -15,7 +15,8 @@ extern "C" JNIEXPORT jlong JNICALL Java_com_test_cmaketest_U16String__1nMake(
 
 extern "C" JNIEXPORT jlong JNICALL
 Java_com_test_cmaketest_U16String__1nGetFinalizer(JNIEnv* env, jclass clazz) {
-  // std::vector<jchar>* text = reinterpret_cast<std::vector<jchar>*>(static_cast<uintptr_t>(textPtr));
+  // std::vector<jchar>* text =
+  // reinterpret_cast<std::vector<jchar>*>(static_cast<uintptr_t>(textPtr));
   return static_cast<jlong>(reinterpret_cast<uintptr_t>(&deleteU16String));
 }
 
