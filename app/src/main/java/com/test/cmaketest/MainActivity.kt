@@ -1,5 +1,7 @@
 package com.test.cmaketest
 
+import android.app.ActivityManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +32,11 @@ class MainActivity : AppCompatActivity(), ConnectionListener {
         val capabilities: Capabilities = AndroidCapabilities()
         val foreverNotifier: ForeverNotifier = AndroidForeverNotifier(capabilities)
         createJavaBindingContext(foreverNotifier)
+
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE)
+        val configurationInfo = (activityManager as ActivityManager).deviceConfigurationInfo
+        val supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000
+        Log.e("reqGlEsVersion", configurationInfo.reqGlEsVersion.toString())
     }
 
     companion object {
