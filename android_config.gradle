@@ -57,7 +57,7 @@ static def getCurrentWorkSpaceSystem() {
 println("osName：" + System.getProperty("os.name"))
 
 ext {
-    minSdkVersion = 33
+    minSdkVersion = 30
     compileSdkVersion = 33
     targetSdkVersion = 33
     buildToolsVersion = "33.0.0"

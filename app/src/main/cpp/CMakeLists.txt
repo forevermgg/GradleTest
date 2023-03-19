@@ -150,9 +150,15 @@ add_library( # Sets the name of the library.
         string_conversion.h
         string_conversion.cc
         android/scheduler.hpp
+        task_runner.h
+        thread_pool.cpp
+        thread_pool.hpp
+        thread_pool.cpp
         U16String.cc
         uuid.hpp
         uuid.cpp
+        waitable_event.h
+        waitable_event.cc
         wrap_err.hpp)
 
 # Searches for a specified prebuilt library and stores the path as a

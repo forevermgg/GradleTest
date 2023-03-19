@@ -1,5 +1,6 @@
 #include <jni.h>
 
+#include <latch>
 #include <string>
 
 #include "binding_context.hpp"
@@ -8,7 +9,9 @@
 #include "java_class.hpp"
 #include "java_method.hpp"
 #include "jni_utils.hpp"
+#include "thread_pool.hpp"
 #include "uuid.hpp"
+#include "waitable_event.h"
 
 std::string say_hello() {
 #ifdef WINDOWS
@@ -65,6 +68,13 @@ Java_com_test_cmaketest_MainActivity_execListener(JNIEnv *env, jobject thiz,
   }
 }
 
+bool RunOnThread(std::function<bool(void)> closure) {
+  bool res = false;
+  std::thread thread([&res, &closure] { res = closure(); });
+  thread.join();
+  return res;
+}
+
 extern "C" JNIEXPORT jlong JNICALL
 Java_com_test_cmaketest_SyncNetWorkState_nativeAddConnectionListener(
     JNIEnv *env, jobject thiz, jlong app_native_pointer) {
@@ -92,6 +102,20 @@ Java_com_test_cmaketest_SyncNetWorkState_nativeAddConnectionListener(
           "An unexpected Error was thrown from Java. See LogCat");
     }
   };
+  // https://github.com/google/perfetto/blob/cb5a63c5a1/src/base/threading/thread_pool_unittest.cc
+  ThreadLatch wait_done;
+  ThreadPool pool(1);
+  pool.PostTask([&wait_done] {
+    wait_done.task_started = true;
+    wait_done.notify.Notify();
+  });
+  wait_done.notify.Wait();
+  /*std::latch wait_done{1};
+  ThreadPool pool(1);
+  pool.PostTask([&wait_done] {
+      wait_done.count_down();
+  });
+  wait_done.wait();*/
   uint64_t token = test->add_callback(std::move(callback));
   return static_cast<jlong>(token);
 }

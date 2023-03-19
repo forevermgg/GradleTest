@@ -23,7 +23,6 @@ extern "C" JNIEXPORT jlong JNICALL Java_com_test_cmaketest_OsApp_nativeCreate(
     return reinterpret_cast<jlong>(
         new std::shared_ptr<FOREVER::APP::App>(cached_app));
   }
-
   // App Config
   auto app_name =
       FOREVER::JNI_UTIL::JniUtils::JavaStringToString(env, j_app_name);
