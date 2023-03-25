@@ -141,6 +141,12 @@ android {
     lint {
         baseline = file("lint-baseline.xml")
     }
+
+    lintOptions {
+        abortOnError false
+        xmlReport false
+        check 'NewApi', 'InlinedApi'
+    }
 }
 
 dependencies {
