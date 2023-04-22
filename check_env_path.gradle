@@ -5,7 +5,7 @@ task javaVersionCheck() {
     description 'Ensures the current Java version is supported'
 
     doFirst {
-        def supportedJavaVersions = [JavaVersion.VERSION_11]
+        def supportedJavaVersions = [JavaVersion.VERSION_17]
         def currentJavaVersion = JavaVersion.current()
         System.err.println("currentJavaVersion:" + currentJavaVersion)
         if (!supportedJavaVersions.contains(currentJavaVersion)) {

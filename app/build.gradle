@@ -140,13 +140,11 @@ android {
 
     lint {
         baseline = file("lint-baseline.xml")
+        abortOnError false
+        checkOnly 'NewApi', 'InlinedApi'
+        xmlReport false
     }
 
-    lintOptions {
-        abortOnError false
-        xmlReport false
-        check 'NewApi', 'InlinedApi'
-    }
 }
 
 dependencies {
