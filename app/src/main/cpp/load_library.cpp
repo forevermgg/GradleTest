@@ -17,8 +17,8 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void*) {
   JNIEnv* env = FOREVER::JNI::AttachCurrentThread();
   bool result = false;
 
-   FOREVER_CHECK(result);
-
+  // FOREVER_CHECK(result);
+  // FOREVER_DCHECK(result);
   if (vm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK) {
     return JNI_ERR;
   } else {

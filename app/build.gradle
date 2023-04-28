@@ -56,6 +56,31 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        hwasan {
+            initWith debug
+            externalNativeBuild {
+                cmake {
+                    arguments "-DANDROID_STL=c++_shared", "-DSANITIZE=hwasan"
+                }
+            }
+        }
+        asan {
+            initWith debug
+            debuggable true
+            externalNativeBuild {
+                cmake {
+                    arguments "-DANDROID_STL=c++_shared", "-DSANITIZE=asan"
+                }
+            }
+        }
+        ubsan {
+            initWith debug
+            externalNativeBuild {
+                cmake {
+                    arguments "-DSANITIZE=ubsan"
+                }
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -142,6 +167,11 @@ android {
         xmlReport false
     }
 
+    androidComponents {
+        onVariants(selector().withBuildType("asan"), {
+            packaging.dex.useLegacyPackaging.set(true)
+        })
+    }
 }
 
 dependencies {
