@@ -206,7 +206,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     target_compile_definitions(cmaketest PUBLIC "Android")
 endif()
 
-# if(cmaketest)
+if(SANITIZE)
     # For asan and ubsan, we need to copy some files from the NDK into our APK.
     get_filename_component(HINT_PATH ${ANDROID_C_COMPILER} DIRECTORY)
     set(ARCH_STR ${CMAKE_ANDROID_ARCH})
@@ -269,7 +269,7 @@ endif()
                 TARGET cmaketest PRE_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy ${UBSAN} ${UBSAN_NAME})
     endif()
-# endif()
+endif()
 
 target_link_libraries( # Specifies the target library.
         cmaketest
