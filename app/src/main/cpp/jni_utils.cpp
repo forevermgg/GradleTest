@@ -7,7 +7,7 @@
 
 #include "java_class.hpp"
 #include "java_method.hpp"
-#include "string_conversion.h"
+#include "android/string_conversion.h"
 
 using namespace FOREVER::JNI_UTIL;
 

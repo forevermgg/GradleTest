@@ -117,6 +117,22 @@ add_library( # Sets the name of the library.
 
         # Sets the library as a shared library.
         SHARED
+        android/jni_util.cc
+        android/jni_util.h
+        android/jni_weak_ref.cc
+        android/jni_weak_ref.h
+        android/log_level.h
+        android/log_settings.h
+        android/log_settings.cc
+        android/log_settings_state.cc
+        android/logging.h
+        android/logging.cc
+        android/scoped_java_ref.cc
+        android/scoped_java_ref.h
+        android/thread_local.cc
+        android/thread_local.h
+        android/string_conversion.cc
+        android/string_conversion.h
         app.hpp
         app.cpp
         binding_context.hpp
@@ -147,8 +163,6 @@ add_library( # Sets the name of the library.
         managed.cc
         native-lib.cpp
         NativeObjectReference.cpp
-        string_conversion.h
-        string_conversion.cc
         android/scheduler.hpp
         task_runner.h
         TestData.h
@@ -179,7 +193,7 @@ find_library( # Sets the name of the path variable.
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+#[[if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_compile_definitions(cmaketest PUBLIC "LINUX")
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -190,7 +204,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     target_compile_definitions(cmaketest PUBLIC "Android")
-endif()
+endif()]]
 target_link_libraries( # Specifies the target library.
         cmaketest
 

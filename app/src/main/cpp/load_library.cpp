@@ -2,9 +2,23 @@
 
 #include "java_class_global_def.hpp"
 #include "jni_utils.hpp"
+#include "android/log_settings.h"
+#include "android/jni_util.h"
+#include "android/logging.h"
 
 extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void*) {
-  JNIEnv* env;
+  FOREVER::LogSettings log_settings;
+  log_settings.min_log_level = FOREVER::LOG_INFO;
+  FOREVER::SetLogSettings(log_settings);
+
+  // Initialize the Java VM.
+  FOREVER::JNI::InitJavaVM(vm);
+
+  JNIEnv* env = FOREVER::JNI::AttachCurrentThread();
+  bool result = false;
+
+  FOREVER_CHECK(result);
+
   if (vm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK) {
     return JNI_ERR;
   } else {
