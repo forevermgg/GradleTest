@@ -1,4 +1,5 @@
 #include <jni.h>
+#include <android/log.h>
 
 #include "java_class_global_def.hpp"
 #include "jni_utils.hpp"
