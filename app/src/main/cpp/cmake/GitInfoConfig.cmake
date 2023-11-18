@@ -1,5 +1,7 @@
+# https://cmake.org/cmake/help/latest/module/FindGit.html
 find_package(Git)
 if (GIT_FOUND)
+    message("GIT_EXECUTABLE： " ${GIT_EXECUTABLE})
     execute_process(
             COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
